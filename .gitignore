@@ -40,3 +40,4 @@ jspm_packages
 # build and node_modules of subdirectory
 **/build
 **/node_modules
+.vscode
