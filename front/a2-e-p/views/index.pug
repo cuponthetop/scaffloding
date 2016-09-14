@@ -1,0 +1,18 @@
+html
+  head
+    title
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    //- link(rel="stylesheet", href="styles.css")
+
+    script(src="core-js/client/shim.min.js")
+    script(src="zone.js/dist.zone.js")
+    script(src="reflect-metadata/Reflect.js")
+    script(src="systemjs/dist/system.src.js")
+
+    script(src="config/app.systemjs.config.js")
+    script
+      | System.import('app').catch(function(err) { console.error(err); });
+
+  body
+    app Loading...
