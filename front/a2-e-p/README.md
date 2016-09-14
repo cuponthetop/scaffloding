@@ -1,7 +1,7 @@
 # Angular2 Express Pug for Front-end
 
 ```
-app       ... Angular2 TypeScript application
+ts        ... Angular2 TypeScript application
 config    ... Directory for client-side publically
               available configurations such as systemjs
 lib       ... Express server code for booting up angular
