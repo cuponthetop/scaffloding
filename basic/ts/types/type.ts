@@ -20,8 +20,7 @@ export type LogOption = {
   file?: {
     dir: string,
     filename: string,
-    rotate: boolean,
-    maxSizeInKB: number
+    maxSizeInKB: number,
     level: LogLevel
   },
   console?: {

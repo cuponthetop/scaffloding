@@ -1,7 +1,9 @@
 import { ArgumentParser, ArgumentOptions } from 'argparse';
 import { RunArgument, NullRunArgument } from '../types/type';
-import { packageJSON } from 'load-package-json';
-import { forEach, cloneDeep, has, get } from 'lodash';
+import { packageJSON, projectRoot } from 'load-package-json';
+import { forEach, cloneDeep, assign } from 'lodash';
+import { resolve } from 'path';
+import { readFileSync } from 'fs';
 
 export function parse(): RunArgument {
   let parser: ArgumentParser = createParser(list);
@@ -18,42 +20,12 @@ function formatRawArguments(raw: any): RunArgument {
 
   ret.log.label = raw.label;
 
-  if (has(raw, 'logStoreAddress')) {
-    // surely not enonugh
-    const httpMatcher: RegExp = /((https?):\/\/)?(([\w]+\.?)+)(:[\d]+)?(\/\w+)*/;
-    const address: string = raw.logStoreAddress;
-    let matched: string[] = httpMatcher.exec(address);
+  let configPath: string = resolve(projectRoot, raw.logConfig);
 
-    ret.log.http.ssl = matched[2].toLowerCase() === 'https';
-    ret.log.http.host = matched[3];
-    ret.log.http.port = parseInt(matched[5]);
-    ret.log.http.path = matched[6];
-
-    if (has(raw, 'httpMethod')) {
-      ret.log.http.method = raw.httpMethod;
-    }
-
-    if (has(raw, 'httpLevel')) {
-      ret.log.http.level = raw.httpLevel;
-    }
-  }
-
-  if (has(raw, 'logFileDirectory')) {
-    ret.log.file.dir = raw.logFileDirectory;
-    ret.log.file.filename = get(raw, 'logFilename', 'DEFAULT_LOG_FILENAME');
-    ret.log.file.maxSizeInKB = get(raw, 'logFileSize', 4096);
-
-    if (has(raw, 'fileLevel')) {
-      ret.log.file.level = raw.fileLevel;
-    }
-  }
-
-  if (true === raw.useConsole) {
-    ret.log.console.logConsole = true;
-
-    if (has(raw, 'consoleLevel')) {
-      ret.log.console.level = raw.consoleLevel;
-    }
+  try {
+    ret.log = assign(ret.log, JSON.parse(readFileSync(configPath).toString('utf-8')));
+  } catch (e) {
+    throw new Error(`Failed to load logging configuration: ${e.message}`);
   }
 
   return ret;
@@ -88,77 +60,11 @@ const list: ArgumentItem[] = [
     }
   },
   {
-    args: ["--logStoreAddress", "-laddr"],
+    args: ["--logConfig"],
     opts: {
-      dest: "logStoreAddress",
+      dest: "logConfig",
       type: "string",
-      required: false,
+      defaultValue: "log.json"
     }
-  },
-  {
-    args: ["--httpLevel"],
-    opts: {
-      dest: "httpLevel",
-      type: "string",
-      required: false,
-    }
-  },
-  {
-    args: ["--httpMethod"],
-    opts: {
-      dest: "httpMethod",
-      type: "string",
-      required: false,
-    }
-  },
-  {
-    args: ["--logFileDirectory", "-fdir"],
-    opts: {
-      dest: "logFileDirectory",
-      type: "string",
-      help: "relative path",
-      required: false,
-    }
-  },
-  {
-    args: ["--logFilename", "-fname"],
-    opts: {
-      dest: "logFilename",
-      type: "string",
-      required: false,
-    }
-  },
-  {
-    args: ["--logFileSize", "-fsize"],
-    opts: {
-      dest: "logFileSize",
-      type: "int",
-      required: false,
-    }
-  },
-  {
-    args: ["--fileLevel"],
-    opts: {
-      dest: "fileLevel",
-      type: "string",
-      required: false,
-    }
-  },
-  {
-    args: ["--useConsole", "-console"],
-    opts: {
-      dest: "useConsole",
-      action: "storeTrue",
-      type: "boolean",
-      required: false,
-    }
-  },
-  {
-    args: ["--consoleLevel"],
-    opts: {
-      dest: "consoleLevel",
-      type: "string",
-      required: false,
-    }
-  },
+  }
 ];

@@ -1,0 +1,20 @@
+{
+  "http": {
+    "ssl": false,
+    "method": "POST",
+    "host": "sample.http.log.storage",
+    "port": 80,
+    "path": "log",
+    "level": "info"
+  },
+  "file": {
+    "dir": "log",
+    "filename": "sample_logfile",
+    "maxSizeInKB": 4096,
+    "level": "debug"
+  },
+  "console": {
+    "logConsole": true,
+    "level": "warn"
+  }
+}
