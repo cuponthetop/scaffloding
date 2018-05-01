@@ -1,0 +1,29 @@
+{
+  "name": "basic-scaffolding",
+  "version": "0.0.1",
+  "description": "basic scaffolding for Node.js Server-side using typescript",
+  "main": " ",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "test": "test"
+  },
+  "author": "cuponthetop",
+  "license": "MIT",
+  "dependencies": {
+    "@types/argparse": "^1.0.33",
+    "@types/lodash": "^4.14.108",
+    "@types/logform": "^1.2.0",
+    "@types/node": "^8.10.11",
+    "@types/winston": "^2.3.9",
+    "argparse": "^1.0.10",
+    "lodash": "^4.17.10",
+    "logform": "^1.6.0",
+    "ts-node": "^6.0.1",
+    "typescript": "^2.8.3",
+    "winston": "^2.4.2"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "mocha": "^5.1.1"
+  }
+}
