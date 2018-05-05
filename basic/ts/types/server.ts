@@ -12,7 +12,7 @@ export interface InitOpts {
 }
 
 export interface ListenOpts {
-
+  registerEventHandlers?: boolean
 };
 
 export interface PrepareOpts {
@@ -37,7 +37,7 @@ export abstract class PortHoldingServer {
     this.server = await this.listen(opts.listen);
     ret = ret && (false === _.isNull(this.server));
 
-    if (true === ret) {
+    if (true === ret && true === _.get(opts, 'listen.registerEventHandlers', false)) {
       this.server.on("close", async () => {
         // retry
         await this.clear();
@@ -49,13 +49,13 @@ export abstract class PortHoldingServer {
         await this.init(opts);
       });
 
-      if (_.has(opts, 'logError') && true === opts.logError) {
+      if (true === _.get(opts, 'logError', false)) {
         this.server.on("error", (err: Error) => {
           this.logger.warn(`Error ${err.name} occured on server: ${err.message} - stack: ${err.stack}`);
         });
       }
 
-      if (_.has(opts, 'logConnection') && true === opts.logConnection) {
+      if (true === _.get(opts, 'logConnection', false)) {
         this.server.on("connection", (socket: Socket) => {
           this.logger.info(`New connection from ${socket.remoteAddress}`);
         });
