@@ -20,7 +20,7 @@ export interface ExpressListenOpts extends ListenOpts {
 };
 
 export abstract class ExpressServer extends PortHoldingServer {
-  private app: Express = null;
+  protected app: Express = null;
 
   constructor(logger: LoggerInstance, port: number, services: Service[]) {
     super(logger, port, services);
